@@ -22,6 +22,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         setContentView(R.layout.activity_main);
         List<Fragment> fragments = new Vector<Fragment>();
         fragments.add(Fragment.instantiate(this,  Tab1Fragment.class.getName()));
+
+        fragments.add(Fragment.instantiate(this, Tab1Fragment.class.getName()));
+
         fragments.add(Fragment.instantiate(this, MapFragment.class.getName()));
         this.customPagerAdapter  = new PageAdapter(super.getSupportFragmentManager(), fragments);
         //

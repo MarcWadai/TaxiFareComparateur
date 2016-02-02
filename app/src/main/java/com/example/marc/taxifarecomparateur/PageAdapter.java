@@ -19,16 +19,7 @@ public class PageAdapter extends FragmentPagerAdapter {
     }
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
-        switch(position){
-            case 0 :
-                fragment = new Tab1Fragment();
-                break;
-            case 1 :
-                fragment = new MapFragment();
-        }
-
-        return fragment;
+        return this.fragments.get(position);
     }
 
     @Override
