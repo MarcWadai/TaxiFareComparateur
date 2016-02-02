@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TaxiFareComparateur</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="mapKey">AIzaSyD5gBHuMzWh7998zcbtLdt5B64lchHOLe4</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
