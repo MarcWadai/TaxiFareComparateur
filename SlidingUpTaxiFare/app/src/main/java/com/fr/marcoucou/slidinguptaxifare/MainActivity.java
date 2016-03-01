@@ -1,7 +1,9 @@
 package com.fr.marcoucou.slidinguptaxifare;
 
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private TextView textviewTime;
 
+    private LatLng latLngDeparture;
+    private LatLng latLngArrival;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.location_map);
         mapFragment.getMapAsync(this);
+        latLngDeparture = null;
+        latLngArrival = null;
         setAutocompletionTextField();
         textviewTime = (TextView) findViewById(R.id.textViewTime);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/bakery.ttf");
@@ -52,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i("Autocomplete", "Place: " + place.getLatLng());
+                latLngDeparture = place.getLatLng();
             }
             @Override
             public void onError(Status status) {
@@ -70,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i("Autocomplete", "Place: " + place.getLatLng());
+                latLngArrival = place.getLatLng();
             }
             @Override
             public void onError(Status status) {
@@ -121,12 +130,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void calculateFareClick(View view){
-        ApiCallAsyncTask apiCallAsyncTask = (ApiCallAsyncTask) new ApiCallAsyncTask(new ApiCallResponse() {
-            @Override
-            public void onApiCallCompleted(String response) {
-                Log.d("response", response);
-            }
-        }, this);
-        apiCallAsyncTask.execute("hello");
+        if (latLngArrival == null || latLngDeparture == null){
+            new AlertDialog.Builder(this)
+                    .setTitle("Wrong entries")
+                    .setMessage("The departure field or Arrival field is not filled correctly")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+        else{
+            ApiCallAsyncTask apiCallAsyncTask = (ApiCallAsyncTask) new ApiCallAsyncTask(new ApiCallResponse() {
+                @Override
+                public void onApiCallCompleted(String response) {
+                    Log.d("response", response);
+                }
+            }, this);
+            apiCallAsyncTask.execute("hello");
+        }
+
     }
 }
