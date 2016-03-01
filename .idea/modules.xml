@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/TaxiFareComparateur-master.iml" filepath="$PROJECT_DIR$/TaxiFareComparateur-master.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/TaxiFareComparateur.iml" filepath="$PROJECT_DIR$/TaxiFareComparateur.iml" />
+>>>>>>> dddc83d6096721e01e39cf6067960be62dce1bb5
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+    </modules>
+  </component>
+</project>
