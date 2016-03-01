@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Taxi Fare </string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Nothing</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="google_app_id">AIzaSyDQXhZ5Q6FZneVW6n1ubITnTWcSr2dMxx8</string>
+</resources>

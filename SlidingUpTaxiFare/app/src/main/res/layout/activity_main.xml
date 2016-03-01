@@ -1,0 +1,140 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="120dp"
+        sothree:umanoShadowHeight="2dp">
+
+            <fragment
+            android:id="@+id/location_map"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginTop="5dp"
+            class="com.google.android.gms.maps.MapFragment"
+            android:name="com.fr.marcoucou.slidinguptaxifare.MainActivity"    />
+
+
+        <RelativeLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:color="@android:color/holo_blue_dark"
+            android:background="@drawable/transparentlayout">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:background="#c0c0c0"/>
+            <TextView
+                android:text="Taxi Fare Comparator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="7dp"
+                android:textSize="20dp"
+                android:textColor="@color/text_blue"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estimated Fare : "
+                android:id="@+id/textViewFare"
+                android:layout_below="@+id/textView"
+                android:textColor="@color/text_blue"
+                android:layout_marginTop="50dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/resultEstimatedFare"
+                android:layout_toRightOf="@+id/textViewFare"
+                android:layout_alignBaseline="@+id/textViewFare"
+                android:layout_marginLeft="50dp"
+                android:text="\?\?\?"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estimated Time : "
+                android:id="@+id/textViewTime"
+                android:layout_below="@+id/textViewFare"
+                android:textColor="@color/text_blue"
+                android:layout_marginTop="50dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/resultTime"
+                android:layout_toRightOf="@+id/textViewTime"
+                android:layout_alignBaseline="@+id/textViewTime"
+                android:layout_marginLeft="50dp"
+                android:text="\?\?\?"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance"
+                android:id="@+id/textViewDistance"
+                android:layout_below="@+id/textViewTime"
+                android:textColor="@color/text_blue"
+                android:layout_marginTop="50dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/resultDistance"
+                android:layout_toRightOf="@+id/textViewDistance"
+                android:layout_alignBaseline="@+id/textViewDistance"
+                android:layout_marginLeft="50dp"
+                android:text="\?\?\?"
+                />
+
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Departure"
+                android:layout_marginTop="100dp"
+                android:layout_below="@+id/textViewDistance"
+                android:id="@+id/departureTextField"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                />
+
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/departureTextField"
+                android:hint="Arrival"
+                android:id="@+id/arrivaltextField"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calculate"
+                android:id="@+id/button"
+                android:layout_below="@+id/arrivaltextField"
+                android:layout_marginTop="15dp"
+                android:gravity="center_horizontal"
+                android:onClick="calculateFareClick"
+                />
+
+        </RelativeLayout>
+
+
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</RelativeLayout>
