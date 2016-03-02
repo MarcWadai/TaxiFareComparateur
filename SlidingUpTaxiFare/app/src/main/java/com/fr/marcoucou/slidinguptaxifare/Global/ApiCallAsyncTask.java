@@ -1,6 +1,5 @@
-package com.fr.marcoucou.slidinguptaxifare;
+package com.fr.marcoucou.slidinguptaxifare.Global;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -10,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -44,11 +41,12 @@ public class ApiCallAsyncTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         // get the string from params, which is an array
-        String myString = params[0];
-        Log.d("params",myString);
+        String origin = params[0];
+        String destination = params[1];
+        Log.d("params",origin);
         StringBuffer chaine = new StringBuffer("");
         try{
-            URL url = new URL("https://api.taxifarefinder.com/entity?key=fEfaswEWrUZ4&location=42.356261,-71.065334");
+            URL url = new URL(Constants.URL + Constants.apiKeyTaxi + "&entity_handle=Paris-France&origin=" +origin+"&destination="+destination);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestProperty("User-Agent", "");
             connection.setRequestMethod("GET");

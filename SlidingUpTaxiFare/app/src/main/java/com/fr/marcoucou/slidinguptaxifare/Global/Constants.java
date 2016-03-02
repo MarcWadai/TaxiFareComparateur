@@ -1,4 +1,4 @@
-package com.fr.marcoucou.slidinguptaxifare;
+package com.fr.marcoucou.slidinguptaxifare.Global;
 
 /**
  * Created by Marc on 01/03/2016.

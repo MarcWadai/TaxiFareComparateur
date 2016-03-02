@@ -20,7 +20,7 @@
             android:layout_height="450dp"
             android:layout_marginTop="5dp"
             class="com.google.android.gms.maps.MapFragment"
-            android:name="com.fr.marcoucou.slidinguptaxifare.MainActivity"    />
+            android:name="com.fr.marcoucou.slidinguptaxifare.Controller.MainActivity"    />
 
 
         <RelativeLayout

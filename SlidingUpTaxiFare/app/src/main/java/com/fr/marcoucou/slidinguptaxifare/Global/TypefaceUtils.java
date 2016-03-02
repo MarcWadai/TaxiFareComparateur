@@ -1,4 +1,4 @@
-package com.fr.marcoucou.slidinguptaxifare;
+package com.fr.marcoucou.slidinguptaxifare.Global;
 
 import android.content.Context;
 import android.graphics.Typeface;

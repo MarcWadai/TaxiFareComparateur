@@ -1,4 +1,4 @@
-package com.fr.marcoucou.slidinguptaxifare;
+package com.fr.marcoucou.slidinguptaxifare.Controller;
 
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -11,6 +11,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fr.marcoucou.slidinguptaxifare.Global.ApiCallAsyncTask;
+import com.fr.marcoucou.slidinguptaxifare.Global.ApiCallResponse;
+import com.fr.marcoucou.slidinguptaxifare.Global.Constants;
+import com.fr.marcoucou.slidinguptaxifare.Global.TypefaceUtils;
+import com.fr.marcoucou.slidinguptaxifare.Model.FareEstimation;
+import com.fr.marcoucou.slidinguptaxifare.R;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -22,13 +28,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
     private TextView textviewTime;
 
+    private TextView textViewEstimatedPrice;
+    private TextView textViewEstimatedDistance;
+    private TextView textViewEstimatedTime;
+
     private LatLng latLngDeparture;
     private LatLng latLngArrival;
+
+    private FareEstimation fareEstimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         textviewTime = (TextView) findViewById(R.id.textViewTime);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/bakery.ttf");
         textviewTime.setTypeface(typeface);
+
+        textViewEstimatedDistance = (TextView) findViewById(R.id.resultDistance);
+        textViewEstimatedPrice = (TextView) findViewById(R.id.resultEstimatedFare);
+        textViewEstimatedTime = (TextView) findViewById(R.id.resultTime);
 
     }
 
@@ -80,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i("Autocomplete", "Place: " + place.getLatLng());
                 latLngArrival = place.getLatLng();
             }
+
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
@@ -147,10 +166,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onApiCallCompleted(String response) {
                     Log.d("response", response);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        fillFareEstimateFromJSON(jsonObject);
+                    } catch (Throwable t){
+                        Log.e("Taxi", "Couldnt parse malformed JSON \""+ response + "\"" );
+                    }
                 }
             }, this);
-            apiCallAsyncTask.execute("hello");
+            String arrivalString = String.valueOf(latLngArrival.latitude)  +","+ String.valueOf(latLngArrival.longitude);
+            String departureString = String.valueOf(latLngDeparture.latitude)  +","+ String.valueOf(latLngDeparture.longitude);
+            apiCallAsyncTask.execute(departureString, arrivalString);
         }
 
+    }
+
+
+    public void fillFareEstimateFromJSON(JSONObject json){
+        try {
+            long totalFare = json.getLong("total_fare");
+            int distance = json.getInt("distance");
+            int time = json.getInt("duration");
+            String locale = json.getString("locale");
+
+
+            fareEstimation = new FareEstimation(distance,totalFare,time,locale);
+            filTextViewWithValue();
+            Log.d("taxi", fareEstimation.getLocale());
+            Log.d("taxi", " price :" +fareEstimation.getEstimatedPrice());
+        } catch (Throwable t){
+            Log.e("Taxi", "Couldnt parse malformed JSON \""+ json + "\"" );
+        }
+
+    }
+
+    public void filTextViewWithValue(){
+        textViewEstimatedTime.setText(""+fareEstimation.getEstimatedTime());
+        textViewEstimatedPrice.setText( ""+fareEstimation.getEstimatedPrice());
+        textViewEstimatedDistance.setText(""+fareEstimation.getEstimatedDistance());
     }
 }
