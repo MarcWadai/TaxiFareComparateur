@@ -1,6 +1,7 @@
 package com.fr.marcoucou.slidinguptaxifare.Controller;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -25,8 +26,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
 
@@ -78,7 +81,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // TODO: Get info about the selected place.
                 Log.i("Autocomplete", "Place: " + place.getLatLng());
                 latLngDeparture = place.getLatLng();
+                if (googleMap != null) {
+                    googleMap.addMarker(new MarkerOptions().position(latLngDeparture)
+                            .title("Departure : " + place.getAddress())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngDeparture, 500));
+                }
             }
+
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
@@ -97,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // TODO: Get info about the selected place.
                 Log.i("Autocomplete", "Place: " + place.getLatLng());
                 latLngArrival = place.getLatLng();
+                if (googleMap != null){
+                    googleMap.addMarker(new MarkerOptions().position(latLngArrival).title("Arrival : " + place.getAddress()));
+                }
             }
 
             @Override
@@ -123,31 +137,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * function to load map. If map is not created it will create it for you
-     * */
-    private void initilizeMap() {
-        if (googleMap == null) {
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-                    R.id.location_map)).getMap();
-
-            // check if map is created successfully or not
-            if (googleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        }
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        LatLng lognesPosition = new LatLng(48.8333,2.6167);
-        googleMap.addMarker(new MarkerOptions().position(lognesPosition).title("Lognes city gang"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lognesPosition, 30));
+        try {
+            googleMap.setMyLocationEnabled(true);
+        } catch(SecurityException e){
+            Log.e("Security", "Security exception " + e);
+        }
     }
-
     public void calculateFareClick(View view){
         if (latLngArrival == null || latLngDeparture == null){
             new AlertDialog.Builder(this)
@@ -192,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             fareEstimation = new FareEstimation(distance,totalFare,time,locale);
             filTextViewWithValue();
+            drawPahtInMap();
             Log.d("taxi", fareEstimation.getLocale());
             Log.d("taxi", " price :" +fareEstimation.getEstimatedPrice());
         } catch (Throwable t){
@@ -201,8 +201,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void filTextViewWithValue(){
-        textViewEstimatedTime.setText(""+fareEstimation.getEstimatedTime());
-        textViewEstimatedPrice.setText( ""+fareEstimation.getEstimatedPrice());
-        textViewEstimatedDistance.setText(""+fareEstimation.getEstimatedDistance());
+        int timeMinute = secondeToMinutes(fareEstimation.getEstimatedTime());
+        int distanceKm = meterToKilometer(fareEstimation.getEstimatedDistance());
+        textViewEstimatedTime.setText(""+ timeMinute + " min");
+        textViewEstimatedDistance.setText(""+ distanceKm + " km");
+        textViewEstimatedPrice.setText( ""+fareEstimation.getEstimatedPrice() +" EUR");
+
+    }
+
+    public int meterToKilometer(int meter){
+        int newKilometer = meter / 1000;
+        return newKilometer;
+    }
+
+    public int secondeToMinutes(int seconde){
+        int minuteTime = seconde * 60 ;
+        return minuteTime;
+    }
+
+
+    public void drawPahtInMap(){
+        PolylineOptions line=
+                new PolylineOptions().add(latLngDeparture,
+                        latLngArrival)
+                        .width(5).color(Color.RED);
+
+        googleMap.addPolyline(line);
     }
 }
